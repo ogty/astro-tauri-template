@@ -2,16 +2,21 @@
   "name": "@example/basics",
   "version": "0.0.1",
   "private": true,
+  "main": "index.astro",
   "scripts": {
-    "dev": "astro dev",
+    "astro:dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "astro:build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "format": "prettier --write \"src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}\""
+    "format": "prettier --write \"src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}\"",
+    "dev": "npm run tauri dev",
+    "build": "npm run tauri build",
+    "tauri": "tauri"
   },
   "devDependencies": {
     "@astrojs/tailwind": "^1.0.0",
+    "@tauri-apps/cli": "^1.1.1",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.36.1",
     "astro": "^1.1.2",

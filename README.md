@@ -1,4 +1,4 @@
-<h1 align="center">Astro × Tailwind CSS Template</h1>
+<h1 align="center">Astro × Tauri × Tailwind CSS Template</h1>
 
 ## 📷 Icon Component Creation
 
