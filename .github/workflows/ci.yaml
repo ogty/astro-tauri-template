@@ -30,7 +30,7 @@ jobs:
         run: |
           npm install @tauri-apps/cli-linux-x64-gnu \
           && sudo apt install libdbus-1-dev pkg-config \
-          && sudo dnf install dbus-devel pkgconf-pkg-config
+          && sudo apt install dbus-devel pkgconf-pkg-config
 
       - name: Run formatter
         run: |
