@@ -1,4 +1,3 @@
-yes                 ?= true
 name                ?=
 icon                ?=
 size                ?= false
@@ -22,11 +21,7 @@ build:
 	npm run build
 
 add:
-ifeq ($(yes), true)
-	npm run astro add $(name) --yes
-else
 	npm run astro add $(name)
-endif
 
 icon:
 	@curl -s $(ICONS_URL)/$(icon).svg -o $(component_name).$(COMPONENT_EXTENSION)
