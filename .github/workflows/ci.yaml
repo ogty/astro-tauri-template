@@ -29,7 +29,7 @@ jobs:
       - name: Package install
         run: |
           npm install @tauri-apps/cli-linux-x64-gnu \
-          && sudo apt install libdbus-1-dev pkg-config
+          && sudo apt install libdbus-1-dev pkg-config zlib1g libevent-dev
 
       - name: Run formatter
         run: |
