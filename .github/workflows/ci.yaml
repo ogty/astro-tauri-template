@@ -28,8 +28,7 @@ jobs:
 
       - name: Package install
         run: |
-          npm install
-          npm install @tauri-apps/cli-linux-x64-gnu -g
+          npm install @tauri-apps/cli-linux-x64-gnu
 
       - name: Run formatter
         run: |
