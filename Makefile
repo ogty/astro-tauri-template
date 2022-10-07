@@ -20,6 +20,9 @@ start:
 build:
 	npm run build
 
+format:
+	npm run format
+
 add:
 	npm run astro add $(name)
 
