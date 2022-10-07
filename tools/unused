@@ -1,0 +1,97 @@
+#!/bin/sh
+
+RED="\033[0;31m"
+YELLOW="\033[1;33m"
+NO_COLOR="\033[0m"
+CONFIRM=true
+DELETE=true
+DELIMITER="'"
+IGNORE_DIRS=("pages" "assets")
+IGNORE_FILES=("env.d.ts")
+TARGET_EXTENSIONS=(".jsx" ".tsx" ".astro" ".svelte" ".vue")
+
+usingModulePaths=()
+targetFilePaths=()
+unusedModulePaths=()
+
+directoryPath="$1"
+
+# Confirmation regarding delete option
+if [ "$DELETE" = true ]; then
+  echo "Are you sure you want to delete the unused files?"
+  echo "Type 'yes' to continue: "
+  read answer
+  if [ "$answer" != "yes" ]; then
+    echo "Aborting..."
+    exit 1
+  fi
+fi
+
+for filePath in `find $directoryPath -type f`; do
+  fileName=$(echo $filePath | awk -f ./tools/splitter.awk)
+  fileExtension=${fileName##*.}
+  fileNameWithoutExtension=${fileName%.*}
+
+  # If the file is not in the target extensions, skip it
+  if ! [[ "${TARGET_EXTENSIONS[@]}" =~ "$fileExtension" ]]; then
+    continue
+  fi
+
+  targetFilePaths+=($fileNameWithoutExtension)
+  usingModuleName=$(awk -f ./tools/module_name_retriver.awk $filePath)
+  usingModulePaths+=($usingModuleName)
+done
+
+# Remove duplicates
+usingModulePaths=($(echo "${usingModulePaths[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
+
+# Store unmatched modules in array
+for targetFilePath in ${targetFilePaths[@]}; do
+  if [[ ! ${usingModulePaths[@]} =~ $targetFilePath ]]; then
+    unusedModulePaths+=($targetFilePath)
+  fi
+done
+
+# Remove duplicates
+unusedModulePaths=($(echo "${unusedModulePaths[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
+
+# Output absolute paths of unused modules to file
+for filePath in `find $directoryPath -type f`; do
+  fileName=$(echo $filePath | awk -f ./tools/splitter.awk)
+  fileNameWithoutExtension=${fileName%.*}
+
+  # Ignore the target directory
+  for ignoreDirectory in ${IGNORE_DIRS[@]}; do
+    if [[ "$filePath" == *${ignoreDirectory}* ]]; then
+      echo $YELLOW"Skip: $filePath"$NO_COLOR
+      continue 2
+    fi
+  done
+
+  # Ignore defined target files
+  if [[ ${IGNORE_FILES[@]} =~ $fileName ]]; then
+    continue
+  fi
+
+  # If the file is in the unused list, delete it
+  for unusedModulePath in ${unusedModulePaths[@]}; do
+    if [[ $fileNameWithoutExtension == $unusedModulePath ]]; then
+      coloredFileName="${RED}$fileName${NO_COLOR}"
+      filePathWithoutLastChild=$(echo "$filePath" | awk -v file_name=$fileName -f ./tools/replacer.awk)
+
+      if [ "$DELETE" = true ]; then
+        if [ "$CONFIRM" = true ]; then
+          clear
+          echo "Are you sure you want to delete \n\n\t$filePathWithoutLastChild$coloredFileName?\n"
+          echo "Type 'y' to continue: "
+          read answer
+          if [ "$answer" = "y" ]; then
+            rm $filePath
+          fi
+        else
+          rm $filePath
+        fi
+      fi
+    fi
+  done
+done
