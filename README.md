@@ -1,5 +1,58 @@
 <h1 align="center">Astro × Tauri × Tailwind CSS Template</h1>
 
+## 🤖 Use tauri command
+
+```zsh
+$ npm install @tauri-apps/api
+```
+
+**`src-tauri/src/main.rs`**
+
+```rs
+// ...
+
+fn main() {
+  tauri::Builder::default()
+    .invoke_handler(tauri::generate_handler![
+      hello,
+    ])
+    .run(tauri::generate_context!())
+    .expect("error while running tauri application");
+}
+
+#[tauri::command]
+fn hello() {
+  println!("Hello from Rust!");
+}
+```
+
+**`src/components/atoms/Call.svelte`**
+
+```svelte
+<script lang="ts">
+  import { invoke } from '@tauri-apps/api';
+
+  invoke('hello');
+</script>
+```
+
+**`src/pages/index.astro`**
+
+```astro
+---
+import Call from '@atoms/Call.svelte';
+import Layout from '@layouts/Layout.astro';
+---
+
+<Layout title="Astro × Tailwind CSS Template">
+  <Call client:only />
+</Layout>
+```
+
+> **Note**<br />
+> The `.astro` file will probably not call the tauri command.<br />
+> You can call it if it is a svelte file, but in that case you must specify `cliend:only`. `client:load` will not work!
+
 ## 📷 Icon Component Creation
 
 Icons in [Bootstrap Icons](https://icons.getbootstrap.com/) can be easily converted to icon components.
