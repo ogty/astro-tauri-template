@@ -29,7 +29,7 @@ jobs:
       - name: Package install
         run: |
           npm install
-          cnpm install @tauri-apps/cli-linux-x64-gnu -g
+          npm install @tauri-apps/cli-linux-x64-gnu -g
 
       - name: Run formatter
         run: |
