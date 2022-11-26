@@ -1,5 +1,16 @@
 <h1 align="center">Astro × Tauri × Tailwind CSS Template</h1>
 
+## ⚙️ Setup
+
+```zsh
+$ git clone https://github.com/ogty/astro-tauri-template <project-name>
+$ cd <project-name>
+$ npm install
+$ npm run astro add <framework-name>
+$ npm run build # Run to eliminate dist file errors
+$ npm run dev
+```
+
 ## 🤖 Use tauri command
 
 ```zsh
